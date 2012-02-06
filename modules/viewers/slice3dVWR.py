@@ -120,6 +120,10 @@ class slice3dVWR(IntrospectModuleMixin, ColourDialogMixin, ModuleBase):
 
         # set the default
         self.threedFrame.threedRWI.SetInteractorStyle(self._cInteractorStyle)
+        
+        rwi = self.threedFrame.threedRWI
+        rwi.Unbind(wx.EVT_MOUSEWHEEL)
+        rwi.Bind(wx.EVT_MOUSEWHEEL, self._handler_mousewheel)        
 
         # initialise our sliceDirections, this will also setup the grid and
         # bind all slice UI events
@@ -1068,6 +1072,43 @@ class slice3dVWR(IntrospectModuleMixin, ColourDialogMixin, ModuleBase):
     #################################################################
     # callbacks
     #################################################################
+
+    def _handler_mousewheel(self, event):
+        # event.GetWheelRotation() is + or - 120 depending on
+        # direction of turning.
+        if event.ControlDown():
+            delta = 10
+        elif event.ShiftDown():
+            delta = 1
+        else:
+            # if user is NOT doing shift / control, we pass on to the
+            # default handling which will give control to the VTK
+            # mousewheel handlers.
+            self.threedFrame.threedRWI.OnMouseWheel(event)
+            return
+            
+        selected_sds  = self.sliceDirections.getSelectedSliceDirections()
+        if len(selected_sds) == 0:
+            if len(self.sliceDirections._sliceDirectionsDict) == 1:
+                # convenience: nothing selected, but there is only one SD, use that then!
+                sd = self.sliceDirections._sliceDirectionsDict.items()[0][1]
+            else:
+                return
+            
+        else:
+            sd = selected_sds[0]
+            
+        if event.GetWheelRotation() > 0:
+            print delta
+            sd.delta_slice(+delta)
+            #self._ipw1_delta_slice(+delta)
+        else:
+            print -delta
+            sd.delta_slice(-delta)
+            #self._ipw1_delta_slice(-delta)
+
+        self.render3D()
+        #self.ipws[0].InvokeEvent('InteractionEvent')
 
     def _handlerVoiAutoSizeChoice(self, event):
         if self._voi_widget.GetEnabled():

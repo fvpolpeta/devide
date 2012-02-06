@@ -550,6 +550,19 @@ class sliceDirection:
             planeSource.Push(val)
             self._ipws[0].UpdatePlacement()
             self._syncAllToPrimary()
+            
+    def delta_slice(self, delta):
+        """Move to the delta slices fw/bw, IF the IPW is currently
+        aligned with one of the axes.
+        """
+
+        ipw = self._ipws[0]
+        if ipw.GetPlaneOrientation() < 3:
+            ci = ipw.GetSliceIndex()
+            ipw.SetSliceIndex(ci + delta)
+            
+        self._syncAllToPrimary()
+            
 
     def removeData(self, inputData):
         # search for the ipw with this inputData
