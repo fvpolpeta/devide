@@ -8,14 +8,14 @@ import re
 
 # the main release version: year.month (ubuntu-style) on release
 # branches (the branch is also named vYEAR.MONTH), DEV for trunk
-VERSION = "12.2.6"
+VERSION = "12.2.7"
 
 # if built with johannes, the SVN_REVISION part might be rewritten.
 DEVIDE_VERSION = '%s' % (VERSION,)
 
 # will be filled in by johannes
-DEVIDE_REVISION_ID = "NOT SET"
-JOHANNES_REVISION_ID = "NOT SET"
+DEVIDE_REVISION_ID = "5695faaaa814"
+JOHANNES_REVISION_ID = "5037c185ae81+"
 
 # standard Python imports
 import getopt

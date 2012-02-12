@@ -35,20 +35,19 @@ class histogramSegment(IntrospectModuleMixin, ModuleBase):
         
 
     def close(self):
+        # disconnect our inputs
         for i in range(len(self.get_input_descriptions())):
             self.set_input(i, None)
 
+        self._renderer.RemoveAllViewProps()
+        self._viewFrame.rwi.GetRenderWindow().Finalize()
+        self._viewFrame.rwi.SetRenderWindow(None)
+        del self._viewFrame.rwi
+
+        self._viewFrame.Destroy()
+
         # call close method of base class
         ModuleBase.close(self)
-
-        # we should be able to take care of our renderwindow now
-        # we have to do this nasty trick until my Finalize changes are
-        # implemented in all vtkRenderWindow types
-        self._renderer.RemoveAllViewProps()
-        del self._renderer
-        self._viewFrame.rwi.GetRenderWindow().WindowRemap()
-        self._viewFrame.Destroy()
-        del self._viewFrame
 
     def get_config(self):
         return self._config
