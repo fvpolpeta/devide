@@ -5,25 +5,6 @@
 # See COPYRIGHT for details.
 
 import re
-
-try:
-    # devide_versions.py is written by johannes during building DeVIDE distribution
-    import devide_versions
-
-except ImportError:
-    # if there's no versions.py, we have these defaults
-    # DEVIDE_VERSION is usually y.m.d of the release, or y.m.D if
-    # development version
-    DEVIDE_VERSION = "12.2.D"
-    DEVIDE_REVISION_ID = "DEV"
-    JOHANNES_REVISION_ID = "DEV"
-
-else:
-    DEVIDE_VERSION = devide_versions.DEVIDE_VERSION
-    DEVIDE_REVISION_ID = devide_versions.DEVIDE_REVISION_ID
-    JOHANNES_REVISION_ID = devide_versions.JOHANNES_REVISION_ID
-
-# standard Python imports
 import getopt
 import mutex
 import os
@@ -38,6 +19,36 @@ import ConfigParser
 # we need to import this explicitly, else the installer builder
 # forgets it and the binary has e.g. no help() support.
 import site
+
+
+dev_version = False
+try:
+    # devide_versions.py is written by johannes during building DeVIDE distribution
+    import devide_versions
+
+except ImportError:
+    dev_version = True
+
+else:
+    # check if devide_version.py comes from the same dir as this devide.py
+    dv_path = os.path.abspath(os.path.dirname(devide_versions.__file__))
+    d_path = os.path.abspath(os.path.dirname(sys.argv[0]))
+    if dv_path != d_path:
+        # devide_versions.py is imported from a different dir than this file, so DEV
+        dev_version = True
+
+if dev_version:
+    # if there's no valid versions.py, we have these defaults
+    # DEVIDE_VERSION is usually y.m.d of the release, or y.m.D if
+    # development version
+    DEVIDE_VERSION = "12.2.D"
+    DEVIDE_REVISION_ID = "DEV"
+    JOHANNES_REVISION_ID = "DEV"
+
+else:
+    DEVIDE_VERSION = devide_versions.DEVIDE_VERSION
+    DEVIDE_REVISION_ID = devide_versions.DEVIDE_REVISION_ID
+    JOHANNES_REVISION_ID = devide_versions.JOHANNES_REVISION_ID
 
 
 ############################################################################
