@@ -1,0 +1,1 @@
+  * http://objectlistview.sourceforge.net/python/ - elegant wrapper around the clumsy wx.ListCtrl with which you can use it for far more.
